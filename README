@@ -1,3 +1,32 @@
+## Build instructions:
+
+1. Set up build environment as per Google documentation
+
+https://source.android.com/docs/setup/start/requirements
+
+* The `libarchive-tools` package is also necessary to patch the toolchain.
+* The `ccache` package is necessary if you wish to build with CCache (Quicker subsequest builds)
+
+2. Properly clone repository with submodules (KernelSU and toolchains)
+
+```git clone --recurse-submodules https://github.com/Mesazane/9820_kernel.git```
+
+3. Build for your device without CCache and with KSU
+
+```./build.sh -m beyond1lte -k y -c n```
+
+3. Build for all devices with or without KSU
+
+```./build_all.sh -k y```
+
+4. Fetch the flashable zip of the kernel that was just compiled
+
+```build/out/[your_device]/ExtremeKRNL-Nexus...zip```
+
+5. Flash it using a supported recovery like TWRP either using the install function or ADB Sideload
+
+6. Enjoy!
+
 Linux kernel
 ============
 
