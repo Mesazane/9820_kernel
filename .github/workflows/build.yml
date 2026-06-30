@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [beyond0lte, beyond1lte, beyond2lte, beyondx]
+        target: [beyond0lte, beyond1lte, beyond2lte, beyondx, d1, d2s]
 
     steps:
       - name: Checkout source
@@ -119,5 +119,7 @@ jobs:
             | Galaxy S10 | `beyond1lte` | `KisekiKernel-beyond1lte-*.zip` |
             | Galaxy S10+ | `beyond2lte` | `KisekiKernel-beyond2lte-*.zip` |
             | Galaxy S10 5G | `beyondx` | `KisekiKernel-beyondx-*.zip` |
+            | Galaxy Note10 | `d1` | `KisekiKernel-d1-*.zip` |
+            | Galaxy Note10+ | `d2s` | `KisekiKernel-d2s-*.zip` |
 
             _Note:Ensure you are on the correct firmware base before flashing._
