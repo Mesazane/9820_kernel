@@ -380,6 +380,24 @@ const char *security_get_initial_sid_context(u32 sid);
  */
 extern struct page *selinux_kernel_status_page(struct selinux_state *state);
 
+#ifdef CONFIG_KSU
+/*
+ * KernelSU-Next keys its selinux_state usage off LINUX_VERSION_CODE >= 4.17
+ * and calls selinux_kernel_status_page() without arguments on this 4.14
+ * tree, which has selinux_state backported. Accept both forms and default
+ * to the global state when no argument is given.
+ */
+#define __selinux_kernel_status_page0() \
+	selinux_kernel_status_page(&selinux_state)
+#define __selinux_kernel_status_page1(state) \
+	selinux_kernel_status_page(state)
+#define __selinux_kernel_status_page_sel(_0, _1, name, ...) name
+#define selinux_kernel_status_page(...)					\
+	__selinux_kernel_status_page_sel(_0, ##__VA_ARGS__,		\
+					 __selinux_kernel_status_page1,	\
+					 __selinux_kernel_status_page0)(__VA_ARGS__)
+#endif
+
 #define SELINUX_KERNEL_STATUS_VERSION	1
 struct selinux_kernel_status {
 	u32	version;	/* version number of thie structure */
