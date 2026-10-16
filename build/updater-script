@@ -1,5 +1,5 @@
 ui_print(" ");
-ui_print("Installing ExtremeKRNL (S10/N10) UNOFFICIAL...");
+ui_print("Installing KisekiKernel (S10/N10) OFFICIAL...");
 ui_print(" ");
 
 package_extract_file("files/boot.img", "/dev/block/by-name/boot");
