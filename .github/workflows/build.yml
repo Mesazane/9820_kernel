@@ -4,13 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release Tag (OneUI8-9820) v1'
+        description: 'Release Tag (OneUI8-9820) v2'
         required: true
-        default: 'OneUI8-9820-v1'
+        default: 'OneUI8-9820-v2'
       notes:
         description: 'Extra release notes (optional, shown above the changelog)'
         required: false
         default: ''
+      label:
+        description: 'Release label'
+        required: true
+        type: choice
+        default: 'Latest'
+        options:
+          - 'Latest'
+          - 'Pre-release'
+          - 'None'
 
 jobs:
   build:
@@ -128,13 +137,13 @@ jobs:
             echo
 
             if [ -n "$EXTRA_NOTES" ]; then
-              echo "### 📝 Notes"
+              echo "### Notes"
               echo
               echo "$EXTRA_NOTES"
               echo
             fi
 
-            echo "### 📜 Changelog"
+            echo "### Changelog"
             echo
             if [ -n "$PREV_TAG" ]; then
               echo "Changes since \`${PREV_TAG}\`:"
@@ -152,9 +161,9 @@ jobs:
             echo
 
             cat <<'EOF'
-          ### 📦 Downloads
+          ### Downloads
 
-          #### 🔹 Galaxy S10 Series
+          #### Galaxy S10 Series
           | Device Name | Codename | File Name |
           | :--- | :--- | :--- |
           | Galaxy S10e | `beyond0lte` | `KisekiKernel-*-S10_beyond0lte_*.zip` |
@@ -162,7 +171,7 @@ jobs:
           | Galaxy S10+ | `beyond2lte` | `KisekiKernel-*-S10_beyond2lte_*.zip` |
           | Galaxy S10 5G | `beyondx` | `KisekiKernel-*-S10_beyondx_*.zip` |
 
-          #### 🔹 Galaxy Note10 Series
+          #### Galaxy Note10 Series
           | Device Name | Codename | File Name |
           | :--- | :--- | :--- |
           | Galaxy Note10 | `d1` | `KisekiKernel-*-N10_d1_*.zip` |
@@ -181,7 +190,11 @@ jobs:
           name: "${{ inputs.tag }}"
           commit: ${{ github.sha }}
           draft: false
-          prerelease: false
+          # Latest      -> normal release, marked as latest
+          # Pre-release -> marked as non-production ready, never latest
+          # None        -> normal release, latest stays unchanged
+          prerelease: ${{ inputs.label == 'Pre-release' }}
+          makeLatest: ${{ inputs.label == 'Latest' }}
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "final_artifacts/*.zip"
           bodyFile: release_body.md
